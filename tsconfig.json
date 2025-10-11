@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "target": "es6",
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "declaration": false,
+    "removeComments": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "outDir": "./dist/",
+    "lib": [
+      "dom",
+      "es6"
+    ],
+    "baseUrl": "./src",
+    "emitDecoratorMetadata": true
+  },
+  "types" : ["material-ui", "react"],
+  "include": [
+    "./src/**/*"
+  ]
+}

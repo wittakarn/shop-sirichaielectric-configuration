@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} /spa/ [or]
+RewriteCond %{REQUEST_URI} /mpa/
+RewriteRule ^(.*)$ /electricshop-backend/index.php [L]
+LimitRequestBody 0
