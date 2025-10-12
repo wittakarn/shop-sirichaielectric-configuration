@@ -25,14 +25,12 @@ handlePermission();
                 quotationAvailable: <?php echo QUOTATION_AVAILABLE ?>
             }
         </script>
-        <title>Electricth backend</title>
+        <title>SirichaiElectric configuration</title>
     </head>
 
     <body>
         <div id="react-root"></div>
         <!-- Dependencies -->
-        <script src="<?php echo WEB_ROOT ?>js/react.profiling.min.js"></script>
-        <script src="<?php echo WEB_ROOT ?>js/react-dom.profiling.min.js"></script>
         <script src="<?php echo WEB_ROOT ?>dist/bundle.js?v=<?php echo uniqid()?>"></script>
     </body>
 </html>

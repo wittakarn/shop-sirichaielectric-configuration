@@ -150,7 +150,7 @@ const MainMenuComponent: React.FC<Props> = (props: Props) => {
                 <Toolbar>
                     {menuIcon}
                     <Typography variant="h6" noWrap>
-                        Electricshop backend
+                        SirichaiElectric configuration
                     </Typography>
                     {signinInfo}
                 </Toolbar>
