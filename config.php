@@ -1,8 +1,8 @@
 <?php
 define('HOST_NAME', 'localhost');
 define('COOKIE_AVAILABLE_PATH', '/');
-define('MAIN_APP_ROOT', '/electricshop-backend');
-define('ROOT', '/electricshop-backend/');
+define('MAIN_APP_ROOT', '/sirichaielectric-configuration');
+define('ROOT', '/sirichaielectric-configuration/');
 define('DOCUMENT_ROOT', realpath($_SERVER['DOCUMENT_ROOT']).ROOT);
 define('APP_DOMAIN', $_SERVER['HTTP_HOST']);
 define('WEB_ROOT', 'http://'.APP_DOMAIN.ROOT);

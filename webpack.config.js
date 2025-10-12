@@ -6,7 +6,7 @@ module.exports = {
         filename: "bundle.js",
         path: __dirname + "/dist",
         chunkFilename: "[name].chunk.js",
-        publicPath: "/electricshop-backend/dist/"
+        publicPath: "/sirichaielectric-configuration/dist/"
     },
     watch: true,
 
