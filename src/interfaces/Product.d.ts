@@ -1,4 +1,5 @@
 import { MenuGroup } from "./MenuGroup";
+import { ProductSpec } from "./ProductSpec";
 
 export interface Product {
     productId: number;
@@ -16,13 +17,13 @@ export interface Product {
     specificationPdfFileName: string;
     specificationImageFileName: string;
     specificationImageFileNames: string[];
+    productSpecs: ProductSpec[];
 }
 
 export interface ProductForm extends Product {
     productImage?: File;
     specificationPdf?: File;
     specificationImage?: File;
-    specificationImages?: File[];
 }
 
 export interface ProductRequest {

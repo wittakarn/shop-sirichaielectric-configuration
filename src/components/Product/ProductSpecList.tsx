@@ -6,18 +6,18 @@ import { ProductSpec } from 'interfaces/ProductSpec';
 
 interface Props {
     productSpecs: ProductSpec[];
-    handleRemoveClicked: (productId: number) => void;
+    handleRemoveClicked: (index: number) => void;
 }
 
 const ProductSpecListComponent: React.FC<Props> = (props: Props) => {
 
-    const bodyDetails = props.productSpecs.map((productSpecs, index) => (
+    const bodyDetails = props.productSpecs.map((productSpec, index) => (
         <TableRow key={index}>
             <TableCell component="th" scope="row">
                 {index + 1}
             </TableCell>
             <TableCell component="th" scope="row">
-                {productSpecs.specificationImageFile && <img src={URL.createObjectURL(productSpecs.specificationImageFile)} />}
+                {productSpec.specificationImageFile && <img src={URL.createObjectURL(productSpec.specificationImageFile)} />}
             </TableCell>
             <TableCell>
                 <DeleteTableIcon onClick={() => props.handleRemoveClicked(index)} />

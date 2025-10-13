@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { TextField, Grid, Button, Typography } from '@mui/material';
+import { TextField, Grid, Button, Typography, Fab } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import AddIcon from '@mui/icons-material/Add';
 import { withFormik, FormikBag, FormikProps } from 'formik';
 import { ProductForm } from 'interfaces/Product';
 import { withNotification, NotificationProps } from 'components/Dialog/Notification';
@@ -14,6 +14,7 @@ import { UploadImage } from 'components/Display/Upload';
 import { TypographyCenter } from 'components/Display/Typography';
 import { mapProductForm, mapProductRequest } from './mapper';
 import { updateProduct, getProduct } from 'services/ProductService';
+import { ProductSpecList } from './ProductSpecList';
 
 const TypographyForceWidth = styled(TypographyCenter)`
     flex-basis: 180px;
@@ -25,6 +26,7 @@ interface OwnProps {
 
 interface State {
     productId: number;
+    specificationImageFileTemp: File | null;
 }
 
 interface FormValues {
@@ -41,6 +43,7 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
         const productId = this.props.location.state as number;
         this.state = {
             productId,
+            specificationImageFileTemp: null,
         };
     }
 
@@ -58,11 +61,34 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
         this.setFormValue(this.state.productId);
     }
 
+    handleSpecificationImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.currentTarget.files && event.currentTarget.files[0]) {
+            this.setState({
+                specificationImageFileTemp: event.currentTarget.files[0],
+            });
+        }
+    }
+
+    handleAddSpecificationImage = () => {
+        const { values, setFieldValue } = this.props;
+        const { specificationImageFileTemp } = this.state;
+        if (specificationImageFileTemp) {
+            setFieldValue('fields.productSpecs', [
+                ...values.fields.productSpecs,
+                {
+                    productId: values.fields.productId,
+                    specificationImageFile: specificationImageFileTemp,
+                }
+            ]);
+            this.setState({
+                specificationImageFileTemp: null,
+            });
+        }
+    }
+
     render() {
         const { values, setFieldValue, handleChange, handleSubmit } = this.props;
         const productImageLink = values.fields.productImageFileName && <a href={`${application.shopUrl}image/product/${values.fields.productImageFileName}`} target="_blank"><PhotoLibraryIcon /></a>;
-        const specificationImageLink = values.fields.specificationImageFileName && <a href={`${application.shopUrl}image/specification/${values.fields.specificationImageFileName}`} target="_blank"><PhotoLibraryIcon /></a>;
-        const specificationPdfLink = values.fields.specificationPdfFileName && <a href={`${application.shopUrl}pdf/specification/${values.fields.specificationPdfFileName}`} target="_blank"><PictureAsPdfIcon /></a>;
 
         return (
             <form onSubmit={handleSubmit}>
@@ -175,29 +201,17 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
                                 Image specification
                             </TypographyForceWidth>
                             <UploadImage
-                                name="fields.specificationImage"
                                 type="file"
                                 accept="image/*"
-                                onChange={(event) => {
-                                    setFieldValue("fields.specificationImage", event.currentTarget.files ? event.currentTarget.files[0] : null);
-                                }}
+                                onChange={this.handleSpecificationImageChange}
                             />
-                            {specificationImageLink}
+                            <Fab size="small" color="secondary" aria-label="add" onClick={this.handleAddSpecificationImage}>
+                                <AddIcon />
+                            </Fab>
                         </FlexGrid>
-                        <FlexGrid item sm={12} xs={12}>
-                            <TypographyForceWidth variant="body1">
-                                PDF specification
-                            </TypographyForceWidth>
-                            <UploadImage
-                                name="fields.specificationPdf"
-                                type="file"
-                                accept="application/pdf"
-                                onChange={(event) => {
-                                    setFieldValue("fields.specificationPdf", event.currentTarget.files ? event.currentTarget.files[0] : null);
-                                }}
-                            />
-                            {specificationPdfLink}
-                        </FlexGrid>
+                        <Grid item sm={12} xs={12}>
+                            <ProductSpecList productSpecs={values.fields.productSpecs} handleRemoveClicked={() => { }} />
+                        </Grid>
                         <Grid item sm={6} xs={6}>
                             <PureLink to={`${application.contextRoot}spa/product/search`}>
                                 <Button
@@ -252,6 +266,7 @@ const initialValue: ProductForm = {
     specificationPdfFileName: '',
     specificationImageFileName: '',
     specificationImageFileNames: [],
+    productSpecs: [],
 };
 
 const mapPropsToValues = (props: OwnProps) => {

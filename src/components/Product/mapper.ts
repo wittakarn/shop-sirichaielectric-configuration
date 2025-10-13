@@ -2,7 +2,8 @@ import { Product, ProductDisplayRequest, ProductForm, ProductRequest } from "int
 
 export const mapProductForm = (product: Product): ProductForm => {
     return {
-        ...product
+        ...product,
+        productSpecs: [],
     }
 }
 
