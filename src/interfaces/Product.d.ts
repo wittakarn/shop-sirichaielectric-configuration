@@ -15,12 +15,14 @@ export interface Product {
     productImageFileName: string;
     specificationPdfFileName: string;
     specificationImageFileName: string;
+    specificationImageFileNames: string[];
 }
 
 export interface ProductForm extends Product {
     productImage?: File;
     specificationPdf?: File;
     specificationImage?: File;
+    specificationImages?: File[];
 }
 
 export interface ProductRequest {

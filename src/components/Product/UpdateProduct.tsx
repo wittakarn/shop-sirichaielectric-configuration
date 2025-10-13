@@ -251,6 +251,7 @@ const initialValue: ProductForm = {
     productImageFileName: '',
     specificationPdfFileName: '',
     specificationImageFileName: '',
+    specificationImageFileNames: [],
 };
 
 const mapPropsToValues = (props: OwnProps) => {
