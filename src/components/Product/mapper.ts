@@ -3,6 +3,10 @@ import { Product, ProductDisplayRequest, ProductForm, ProductRequest } from "int
 export const mapProductForm = (product: Product): ProductForm => {
     return {
         ...product,
+        productNameDisplay: product.productNameDisplay ?? '',
+        productUrlName: product.productUrlName ?? '',
+        productSearch: product.productSearch ?? '',
+        productDetail: product.productDetail ?? '',
         productSpecs: [],
     }
 }
@@ -17,9 +21,8 @@ export const mapProductRequest = (product: ProductForm): ProductRequest => {
         standardPrice: product.standardPrice,
         bPrice: product.bPrice,
         productDetail: product.productDetail,
-        productImage: product.productImage || null,
-        specificationPdf: product.specificationPdf || null,
-        specificationImage: product.specificationImage || null,
+        productImage: product.productImage ?? null,
+        productSpecImages: product.productSpecs?.map(spec => spec.specificationImageFile).filter((file): file is File => file !== undefined) ?? [],
     }
 }
 

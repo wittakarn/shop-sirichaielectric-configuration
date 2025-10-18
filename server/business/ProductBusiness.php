@@ -59,18 +59,23 @@ class ProductBusiness
                 $productImageFileName = writeFile(IMAGE_PATH . '/product/', $params['productUrlName'], $files['productImage']);
             }
 
-            $specificationImageFileName = null;
-            if (isset($files['specificationImage'])) {
-                $specificationImageFileName = writeFile(IMAGE_PATH . '/specification/', $params['productUrlName'] . '-specification', $files['specificationImage']);
-            }
-
-            $specificationPdfFileName = null;
-            if (isset($files['specificationPdf'])) {
-                $specificationPdfFileName = writeFile(PDF_PATH . '/specification/', $params['productUrlName'] . '-specification', $files['specificationPdf']);
+            $productSpecImageNames = [];
+            if (isset($files['productSpecImages'])) {
+                $files = $files['productSpecImages'];
+                foreach ($files['name'] as $index => $name) {
+                    $fileArray = [
+                        'name' => $files['name'][$index],
+                        'type' => $files['type'][$index],
+                        'tmp_name' => $files['tmp_name'][$index],
+                        'error' => $files['error'][$index],
+                        'size' => $files['size'][$index],
+                    ];
+                    $productSpecImageNames[] = writeFile(IMAGE_PATH . '/specification/', $params['productUrlName'] . '-specification-' . ($index + 1), $fileArray);
+                }
             }
 
             $productRepo = new ProductRepository($this->dbh);
-            $productRepo->update($params, $productImageFileName, $specificationImageFileName, $specificationPdfFileName);
+            $productRepo->update($params, $productImageFileName, null, null);
 
             $this->dbh->commit();
 

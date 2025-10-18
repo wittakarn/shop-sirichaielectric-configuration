@@ -37,6 +37,7 @@ type FormProps = OwnProps & NotificationProps & RouteComponentProps;
 type Props = FormProps & FormikProps<FormValues>;
 
 class UpdateProductComponent extends React.PureComponent<Props, State> {
+    imageSpecificationInputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
     constructor(props: Props) {
         super(props);
@@ -83,7 +84,14 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
             this.setState({
                 specificationImageFileTemp: null,
             });
+            this.imageSpecificationInputRef.current!.value = '';
         }
+    }
+
+    handleRemoveSpecificationImage = (index: number) => {
+        const { values, setFieldValue } = this.props;
+        const nonRemoveProductSpecs = values.fields.productSpecs.filter((_, i) => i !== index);
+        setFieldValue('fields.productSpecs', nonRemoveProductSpecs);
     }
 
     render() {
@@ -201,6 +209,7 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
                                 Image specification
                             </TypographyForceWidth>
                             <UploadImage
+                                ref={this.imageSpecificationInputRef}
                                 type="file"
                                 accept="image/*"
                                 onChange={this.handleSpecificationImageChange}
@@ -210,7 +219,7 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
                             </Fab>
                         </FlexGrid>
                         <Grid item sm={12} xs={12}>
-                            <ProductSpecList productSpecs={values.fields.productSpecs} handleRemoveClicked={() => { }} />
+                            <ProductSpecList productSpecs={values.fields.productSpecs} handleRemoveClicked={this.handleRemoveSpecificationImage} />
                         </Grid>
                         <Grid item sm={6} xs={6}>
                             <PureLink to={`${application.contextRoot}spa/product/search`}>

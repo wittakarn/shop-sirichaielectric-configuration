@@ -36,8 +36,7 @@ export interface ProductRequest {
     bPrice: number;
     productDetail: string;
     productImage: File | null;
-    specificationPdf: File | null;
-    specificationImage: File | null;
+    productSpecImages: File[];
 }
 
 export interface ProductSearchResult extends Product {
