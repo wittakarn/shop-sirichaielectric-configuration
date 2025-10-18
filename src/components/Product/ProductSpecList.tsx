@@ -1,8 +1,14 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { TableRow, TableHead, TableCell, TableBody, Table } from '@mui/material';
 import { PaperOverflowScroll } from 'components/Display/Paper';
 import { DeleteTableIcon } from 'components/Display/Table';
 import { ProductSpec } from 'interfaces/ProductSpec';
+
+export const Image = styled.img`
+    max-width: 12rem;
+`;
+Image.displayName = 'Image';
 
 interface Props {
     productSpecs: ProductSpec[];
@@ -17,7 +23,7 @@ const ProductSpecListComponent: React.FC<Props> = (props: Props) => {
                 {index + 1}
             </TableCell>
             <TableCell component="th" scope="row">
-                {productSpec.specificationImageFile && <img src={URL.createObjectURL(productSpec.specificationImageFile)} />}
+                {productSpec.specificationImageFile && <Image src={URL.createObjectURL(productSpec.specificationImageFile)} />}
             </TableCell>
             <TableCell>
                 <DeleteTableIcon onClick={() => props.handleRemoveClicked(index)} />
