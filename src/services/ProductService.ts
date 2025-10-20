@@ -21,6 +21,11 @@ export async function getProduct(productId: number): Promise<superagent.Response
     return await agent.type('application/json').query({ productId });
 };
 
+export async function getProductInfo(productId: number): Promise<superagent.Response> {
+    const agent = superagent.get(`${application.root}server/rest/product-info.php`);
+    return await agent.type('application/json').query({ productId });
+};
+
 export async function updateProduct(request: ProductRequest): Promise<superagent.Response> {
     const agent = superagent.post(`${application.root}server/rest/update-product.php`);
 

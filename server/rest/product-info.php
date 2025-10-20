@@ -8,9 +8,9 @@ require_once DOCUMENT_ROOT.'server/utils/String.php';
 
 header("Content-Type: application/json; charset=utf-8");
 $business = new ProductBusiness();
-$result = $business->getProduct($_GET['productId']);
+$result = $business->getProductInfo($_GET['productId']);
 if($result) {
-    $jsonString = json_encode(convertObjectsToCamelCase($result));
+    $jsonString = json_encode(convertObjectsToCamelCase($result), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
     echo $jsonString;
 } else {
     echo null;

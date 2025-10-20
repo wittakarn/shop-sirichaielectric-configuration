@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TableRow, TableHead, TableCell, TableBody, Table } from '@mui/material';
 import { PaperOverflowScroll } from 'components/Display/Paper';
 import { DeleteTableIcon } from 'components/Display/Table';
-import { ProductSpec } from 'interfaces/ProductSpec';
+import { ProductImage } from 'interfaces/ProductImage';
 
 export const Image = styled.img`
     max-width: 12rem;
@@ -11,25 +11,28 @@ export const Image = styled.img`
 Image.displayName = 'Image';
 
 interface Props {
-    productSpecs: ProductSpec[];
+    productSpecs: ProductImage[];
     handleRemoveClicked: (index: number) => void;
 }
 
 const ProductSpecListComponent: React.FC<Props> = (props: Props) => {
 
-    const bodyDetails = props.productSpecs.map((productSpec, index) => (
-        <TableRow key={index}>
+    const bodyDetails = props.productSpecs.map((productSpec, index) => {
+        const imageUrl = productSpec.file ? URL.createObjectURL(productSpec.file)
+            : `${application.shopUrl}image/specification/${productSpec.fileName}`;
+        return <TableRow key={index}>
             <TableCell component="th" scope="row">
                 {index + 1}
             </TableCell>
             <TableCell component="th" scope="row">
-                {productSpec.specificationImageFile && <Image src={URL.createObjectURL(productSpec.specificationImageFile)} />}
+                <Image src={imageUrl} />
             </TableCell>
             <TableCell>
                 <DeleteTableIcon onClick={() => props.handleRemoveClicked(index)} />
             </TableCell>
         </TableRow>
-    ));
+    });
+
     return (
         <PaperOverflowScroll color="primary">
             <Table size="small" aria-label="sub menu table">

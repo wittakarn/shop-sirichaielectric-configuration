@@ -13,7 +13,7 @@ import { PureLink } from 'components/Display/Link';
 import { UploadImage } from 'components/Display/Upload';
 import { TypographyCenter } from 'components/Display/Typography';
 import { mapProductForm, mapProductRequest } from './mapper';
-import { updateProduct, getProduct } from 'services/ProductService';
+import { updateProduct, getProductInfo } from 'services/ProductService';
 import { ProductSpecList } from './ProductSpecList';
 
 const TypographyForceWidth = styled(TypographyCenter)`
@@ -54,7 +54,7 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
 
     setFormValue = async (productId: number) => {
         const { setFieldValue } = this.props;
-        const response = await getProduct(productId);
+        const response = await getProductInfo(productId);
         setFieldValue('fields', mapProductForm(response.body));
     }
 
@@ -272,9 +272,6 @@ const initialValue: ProductForm = {
     capitalPrice: 0,
     standardPrice: 0,
     productImageFileName: '',
-    specificationPdfFileName: '',
-    specificationImageFileName: '',
-    specificationImageFileNames: [],
     productSpecs: [],
 };
 

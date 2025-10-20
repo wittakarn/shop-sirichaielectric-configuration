@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormikBag, FormikProps, withFormik } from 'formik';
 import { Grid, TextField, Button } from '@mui/material';
-import { Product } from 'interfaces/Product';
+import { ProductInfo } from 'interfaces/Product';
 import { EditProductResultList } from 'components/Product/EditProductResultList'
 import { searchProducts, updateProductsDisplay } from 'services/ProductService';
 import { ContainerWithoutPadding } from 'components/Display/Container';
@@ -14,7 +14,7 @@ interface OwnProps {
 
 interface EditProductForm {
     productNameSearch: string;
-    products: Product[];
+    products: ProductInfo[];
 }
 
 interface FormValues {

@@ -5,6 +5,7 @@ require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'connection.php';
 require_once DOCUMENT_ROOT . 'server/repository/ProductRepository.php';
 require_once DOCUMENT_ROOT . 'server/repository/ProductInGroupRepository.php';
+require_once DOCUMENT_ROOT . 'server/repository/ProductImageRepository.php';
 require_once DOCUMENT_ROOT . 'server/utils/File.php';
 require_once DOCUMENT_ROOT . 'server/utils/String.php';
 
@@ -21,6 +22,7 @@ class ProductBusiness
     {
         $productRepo = new ProductRepository($this->dbh);
         $products = $productRepo->getProducts($menuId, $productName);
+
         return $products;
     }
 
@@ -38,10 +40,23 @@ class ProductBusiness
         return $products;
     }
 
+    public function getProductInfo($productId)
+    {
+        $productRepo = new ProductRepository($this->dbh);
+        $product = $productRepo->getProduct($productId);
+
+        // Fetch images for each product
+        $productImageRepo = new ProductImageRepository($this->dbh);
+        $product['images'] = $productImageRepo->getByProductId($product['product_id']);
+
+        return $product;
+    }
+
     public function getProduct($productId)
     {
         $productRepo = new ProductRepository($this->dbh);
         $product = $productRepo->getProduct($productId);
+
         return $product;
     }
 
@@ -75,7 +90,19 @@ class ProductBusiness
             }
 
             $productRepo = new ProductRepository($this->dbh);
-            $productRepo->update($params, $productImageFileName, null, null);
+            $productRepo->update($params, $productImageFileName);
+
+            // Save product spec images to product_image table
+            if (!empty($productSpecImageNames)) {
+                $productImageRepo = new ProductImageRepository($this->dbh);
+                // Delete existing SPEC images for this product
+                $productImageRepo->deleteByProductIdAndType($params['productId'], 'SPEC');
+
+                // Insert new SPEC images
+                foreach ($productSpecImageNames as $sequence => $fileName) {
+                    $productImageRepo->insert($params['productId'], $sequence + 1, 'SPEC', $fileName);
+                }
+            }
 
             $this->dbh->commit();
 
