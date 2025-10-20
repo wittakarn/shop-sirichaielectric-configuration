@@ -1,4 +1,5 @@
 import { ProductInfo, ProductDisplayRequest, ProductForm, ProductRequest } from "interfaces/Product"
+import { imageUrlToFile } from "services/ImageService"
 
 export const mapProductForm = (product: ProductInfo): ProductForm => {
     return {
@@ -11,7 +12,8 @@ export const mapProductForm = (product: ProductInfo): ProductForm => {
     }
 }
 
-export const mapProductRequest = (product: ProductForm): ProductRequest => {
+export const mapProductRequest = async (product: ProductForm): Promise<ProductRequest> => {
+    const productSpecImages = product.productSpecs?.map(async spec => spec.file ?? await imageUrlToFile(`${application.shopUrl}image/specification/${spec.fileName}`, spec.fileName!)) ?? []
     return {
         productId: product.productId,
         productName: product.productName,
@@ -22,7 +24,7 @@ export const mapProductRequest = (product: ProductForm): ProductRequest => {
         bPrice: product.bPrice,
         productDetail: product.productDetail,
         productImage: product.productImage ?? null,
-        productSpecImages: product.productSpecs?.map(spec => spec.file).filter((file): file is File => file !== undefined) ?? [],
+        productSpecImages: await Promise.all(productSpecImages),
     }
 }
 

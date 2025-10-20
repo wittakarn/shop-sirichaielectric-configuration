@@ -78,7 +78,7 @@ class UpdateProductComponent extends React.PureComponent<Props, State> {
                 ...values.fields.productSpecs,
                 {
                     productId: values.fields.productId,
-                    specificationImageFile: specificationImageFileTemp,
+                    file: specificationImageFileTemp,
                 }
             ]);
             this.setState({
@@ -283,7 +283,7 @@ const mapPropsToValues = (props: OwnProps) => {
 
 const handleSubmit = async (values: FormValues, { props }: FormikBag<FormProps, FormValues>) => {
     console.log(values);
-    const request = mapProductRequest(values.fields);
+    const request = await mapProductRequest(values.fields);
     const response = await updateProduct(request);
 
     if (response && response.body) {
