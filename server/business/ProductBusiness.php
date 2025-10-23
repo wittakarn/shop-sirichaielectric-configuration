@@ -92,11 +92,11 @@ class ProductBusiness
             $productRepo = new ProductRepository($this->dbh);
             $productRepo->update($params, $productImageFileName);
 
+            $productImageRepo = new ProductImageRepository($this->dbh);
+            // Delete existing SPEC images for this product
+            $productImageRepo->deleteByProductIdAndType($params['productId'], 'SPEC');
             // Save product spec images to product_image table
             if (!empty($productSpecImageNames)) {
-                $productImageRepo = new ProductImageRepository($this->dbh);
-                // Delete existing SPEC images for this product
-                $productImageRepo->deleteByProductIdAndType($params['productId'], 'SPEC');
 
                 // Insert new SPEC images
                 foreach ($productSpecImageNames as $sequence => $fileName) {

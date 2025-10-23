@@ -8,22 +8,18 @@ class ProductGroupRepository
 		$this->dbh = $conn;
 	}
 
-	public function createProductGroup($params, $groupImageFileName, $groupSpecificationImageFileName, $groupSpecificationPdfFileName)
+	public function createProductGroup($params, $groupImageFileName)
     {
         $query = 'INSERT INTO product_group(group_name_display,
 						group_name_search,
 						group_product_detail,
 						group_image_file_name,
-						group_specification_image_file_name,
-						group_specification_pdf_file_name,
 						display_type,
 						status)
 					VALUES (:groupNameDisplay,
 						:groupNameSearch,
 						:groupProductDetail,
 						:groupImageFileName,
-						:groupSpecificationImageFileName,
-						:groupSpecificationPdfFileName,
 						:displayType,
 						:status)';
         $stmt = $this->dbh->prepare($query);
@@ -39,18 +35,6 @@ class ProductGroupRepository
 			$stmt->bindValue(':groupImageFileName', null, PDO::PARAM_STR);
 		}
 
-		if($groupSpecificationImageFileName) {
-			$stmt->bindParam(':groupSpecificationImageFileName', $groupSpecificationImageFileName, PDO::PARAM_STR);
-		} else {
-			$stmt->bindValue(':groupSpecificationImageFileName', null, PDO::PARAM_STR);
-		}
-
-		if($groupSpecificationPdfFileName) {
-			$stmt->bindParam(':groupSpecificationPdfFileName', $groupSpecificationPdfFileName, PDO::PARAM_STR);
-		} else {
-			$stmt->bindValue(':groupSpecificationPdfFileName', null, PDO::PARAM_STR);
-		}
-
 		$stmt->bindValue(':status', 'A', PDO::PARAM_STR);
 
         $stmt->execute();
@@ -58,7 +42,7 @@ class ProductGroupRepository
 		return $this->dbh->lastInsertId();
     }
 
-	public function updateProductGroup($params, $groupImageFileName, $groupSpecificationImageFileName, $groupSpecificationPdfFileName) {
+	public function updateProductGroup($params, $groupImageFileName) {
 		$query = 'UPDATE product_group 
 					SET group_name_display = :groupNameDisplay,
 					group_name_search = :groupNameSearch,
@@ -67,14 +51,6 @@ class ProductGroupRepository
 
 		if($groupImageFileName) {
 			$query .= ', group_image_file_name = :groupImageFileName ';
-		}
-
-		if($groupSpecificationImageFileName) {
-			$query .= ', group_specification_image_file_name = :groupSpecificationImageFileName ';
-		}
-
-		if($groupSpecificationPdfFileName) {
-			$query .= ', group_specification_pdf_file_name = :groupSpecificationPdfFileName ';
 		}
 		
 		$where = 'WHERE group_id = :groupId';
@@ -89,15 +65,7 @@ class ProductGroupRepository
 		if($groupImageFileName) {
 			$stmt->bindParam(':groupImageFileName', $groupImageFileName, PDO::PARAM_STR);
 		}
-
-		if($groupSpecificationImageFileName) {
-        	$stmt->bindParam(':groupSpecificationImageFileName', $groupSpecificationImageFileName, PDO::PARAM_STR);
-		}
-
-		if($groupSpecificationPdfFileName) {
-        	$stmt->bindParam(':groupSpecificationPdfFileName', $groupSpecificationPdfFileName, PDO::PARAM_STR);
-		}
-
+		
 		$stmt->execute();
     }
 
