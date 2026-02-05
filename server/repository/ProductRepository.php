@@ -241,4 +241,48 @@ class ProductRepository
 
 		$stmt->execute();
 	}
+
+	public function updateProductPricing($productId, $pricing)
+	{
+		$db = $this->dbh;
+
+		$updateFields = [];
+		$allowedPriceFields = [
+			'standardPrice' => 'standard_price',
+			'capitalPrice' => 'capital_price',
+			'ssPrice' => 'ss_price',
+			'sPrice' => 's_price',
+			'aPrice' => 'a_price',
+			'bPrice' => 'b_price',
+			'cPrice' => 'c_price',
+			'vbPrice' => 'vb_price',
+			'vcPrice' => 'vc_price',
+			'dPrice' => 'd_price',
+			'ePrice' => 'e_price',
+			'fPrice' => 'f_price'
+		];
+
+		foreach ($allowedPriceFields as $camelCase => $snakeCase) {
+			if (isset($pricing[$camelCase])) {
+				$updateFields[] = "$snakeCase = :$camelCase";
+			}
+		}
+
+		if (empty($updateFields)) {
+			return;
+		}
+
+		$query = "UPDATE product SET " . implode(', ', $updateFields) . " WHERE product_id = :productId";
+		$stmt = $db->prepare($query);
+
+		foreach ($allowedPriceFields as $camelCase => $snakeCase) {
+			if (isset($pricing[$camelCase])) {
+				$value = $pricing[$camelCase] !== null ? str_replace(",", "", $pricing[$camelCase]) : null;
+				$stmt->bindValue(":$camelCase", $value, PDO::PARAM_STR);
+			}
+		}
+
+		$stmt->bindParam(":productId", $productId, PDO::PARAM_INT);
+		$stmt->execute();
+	}
 }
