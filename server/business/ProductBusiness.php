@@ -166,4 +166,56 @@ class ProductBusiness
 
         return $products;
     }
+
+    public function updateProductsPricing($products)
+    {
+        $updatedCount = 0;
+        $failedProducts = [];
+
+        try {
+            $this->dbh->beginTransaction();
+            $productRepo = new ProductRepository($this->dbh);
+
+            foreach ($products as $product) {
+                try {
+                    if (!isset($product['productId'])) {
+                        $failedProducts[] = [
+                            'product' => $product,
+                            'error' => 'Missing productId'
+                        ];
+                        continue;
+                    }
+
+                    $currentProduct = $this->getProduct($product['productId']);
+                    if ($currentProduct == null || $currentProduct == false) {
+                        $failedProducts[] = [
+                            'productId' => $product['productId'],
+                            'error' => 'Product not found'
+                        ];
+                        continue;
+                    }
+
+                    $productRepo->updateProductPricing($product['productId'], $product);
+                    $updatedCount++;
+                } catch (Exception $e) {
+                    $failedProducts[] = [
+                        'productId' => $product['productId'] ?? 'unknown',
+                        'error' => $e->getMessage()
+                    ];
+                }
+            }
+
+            $this->dbh->commit();
+
+            return [
+                'status' => 'success',
+                'updatedCount' => $updatedCount,
+                'totalCount' => count($products),
+                'failedProducts' => $failedProducts
+            ];
+        } catch (Exception $e) {
+            $this->dbh->rollBack();
+            throw new Exception("Failed to update products pricing: " . $e->getMessage());
+        }
+    }
 }
