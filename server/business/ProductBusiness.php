@@ -231,7 +231,7 @@ class ProductBusiness
                     $updatedCount++;
                 } catch (Exception $e) {
                     $failedProducts[] = [
-                        'productId' => $product['productId'] ?? 'unknown',
+                        'productId' => $product['productId'] ? $product['productId'] : 'unknown',
                         'error' => $e->getMessage()
                     ];
                 }
