@@ -94,6 +94,21 @@ class ProductRepository
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function searchProductByDisplayName($displayName)
+	{
+		$query = 'SELECT p.* FROM product p ';
+		$where = 'WHERE p.product_name_display LIKE :displayName ';
+		$where = $where . " AND product_name_display not like '%[Z]%' and product_name_display not like '%**%' and product_name_display not like '%ยกเลิก%' ";
+		$order = " ORDER BY p.product_name_display ";
+		$limit = " LIMIT 1 ";
+
+		$stmt = $this->dbh->prepare($query . $where . $order . $limit);
+		$stmt->bindValue(':displayName', '%' . $displayName . '%', PDO::PARAM_STR);
+
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
 	public function getProduct($productId)
 	{
 		$query = 'SELECT * FROM product p ';
