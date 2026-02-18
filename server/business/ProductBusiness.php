@@ -38,6 +38,12 @@ class ProductBusiness
         return $products;
     }
 
+    public function searchProductByDisplayName($displayName)
+    {
+        $productRepo = new ProductRepository($this->dbh);
+        return $productRepo->searchProductByDisplayName($displayName);
+    }
+
     public function getProduct($productId)
     {
         $productRepo = new ProductRepository($this->dbh);
