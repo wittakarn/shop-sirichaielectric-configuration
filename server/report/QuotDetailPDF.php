@@ -222,11 +222,9 @@ class QuotDetailPDF extends TCPDF
 		$this->MultiCell($this->columnWidth[6], $columnWidth, number_format($footerData['total_price'], 2), 'LRB', 'R', 0, 0, '', '', true, 0);
 		$this->Ln();
 
+		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2] + $this->columnWidth[3] + $this->columnWidth[4], $columnWidth, '- ใบเสนอราคานี้ไม่ยืนราคา ก่อนสั่งสินค้ารบกวนเช็คสินค้า และราคาสินค้าใหม่ก่อนสั่งทุกครั้ง', 0, 'L', 0, 0, '', '', true, 0);
 
-		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, 'กำหนดชำระเงิน...........................................................................................' . "\n" . 'TERM OF PAYMENT.', 0, 'L', 0, 0, '', '', true, 0);
-		$this->MultiCell($this->columnWidth[3], $columnWidth, '', 0, 'C', 0, 0, '', '', true, 0);
-		$this->MultiCell($this->columnWidth[4], $columnWidth, '', 0, 'C', 0, 0, '', '', true, 0);
-
+		$this->SetFont('', 'B', 11);
 		$vatLabel = "";
 		$vatValue = "";
 		if ($footerData['vat_price'] > 0) {
@@ -238,27 +236,25 @@ class QuotDetailPDF extends TCPDF
 		$this->MultiCell($this->columnWidth[6], $columnWidth, $vatValue, 'LRB', 'R', 0, 0, '', '', true, 0);
 		$this->Ln();
 
+		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, '- สินค้าสั่งพิเศษ, สายไฟสั่งตัด รบกวนโอนเงินก่อน และไม่สามารถเปลี่ยนหรือคืนเงินหรือสินค้าได้', 0, 'L', 0, 0, '', '', true, 0);
+		
 		$this->SetFont('', 'B', 15);
-		$this->MultiCell($this->columnWidth[0], $columnWidth, '', 0, 'C', 0, 0, '', '', true, 0);
-		$this->MultiCell($this->columnWidth[1], $columnWidth, '', 0, 'C', 0, 0, '', '', true, 0);
-		$this->MultiCell($this->columnWidth[2], $columnWidth, '', 0, 'C', 0, 0, '', '', true, 0);
 		$this->MultiCell($this->columnWidth[3] + $this->columnWidth[4] + $this->columnWidth[5], $columnWidth, 'รวมจำนวนเงิน(บาท)', 0, 'R', 0, 0, '', '', true, 0);
 		$this->MultiCell($this->columnWidth[6], $columnWidth, number_format($footerData['net_price'], 2), 'LRB', 'R', 0, 0, '', '', true, 0);
 		$this->Ln();
 
-		$this->SetFont('', '', 12);
-		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, 'กำหนดส่งของ.....................................................................................................', 0, 'L', 0, 0, '', '', true, 0);
-
-		$this->Ln();
-		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, 'หมายเหตุ', 0, 'L', 0, 0, '', '', true, 0);
+		$this->SetFont('', 'B', 11);
+		$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, '- ก่อนชำระเงินค่าสินค้า รบกวนให้ทางร้านตรวจสอบราคาและเช็คสินค้าก่อนทุกครั้ง', 0, 'L', 0, 0, '', '', true, 0);
 		$this->MultiCell($this->columnWidth[3] + $this->columnWidth[4] + $this->columnWidth[5] + $this->columnWidth[6], $columnWidth, 'เสนอโดย ' . $user["name"], 0, 'R', 0, 0, '', '', true, 0);
 		$this->Ln();
 
+		$this->SetFont('', '', 11);
 		if ($footerData['promotion_type'] == 'N') {
 			$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, '............................................................................................................................', 0, 'L', 0, 0, '', '', true, 0);
 		} else {
 			$this->MultiCell($this->columnWidth[0] + $this->columnWidth[1] + $this->columnWidth[2], $columnWidth, '**สินค้าส่วนลดพิเศษไม่ยืนราคา ต้องเช็คสต๊อกสินค้าก่อนสั่งซื้อทุกครั้ง..............', 0, 'L', 0, 0, '', '', true, 0);
 		}
+		$this->MultiCell($this->columnWidth[3] + $this->columnWidth[4] + $this->columnWidth[5] + $this->columnWidth[6], $columnWidth, 'ติดต่อ ' . $user["contact"], 0, 'R', 0, 0, '', '', true, 0);
 
 		$this->Ln();
 		$this->Cell(array_sum($this->columnWidth), 0, '', 'T');
