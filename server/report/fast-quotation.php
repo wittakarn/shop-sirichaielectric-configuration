@@ -48,7 +48,7 @@ $pdf->AddPage();
 $pdf->generateQuotationDetailTable($detailResults);
 
 // print table footer
-$pdf->generateQuotationDetailTableFooter(['name' => 'AI'], $masterResult);
+$pdf->generateQuotationDetailTableFooter(['name' => 'AI', 'contact' => '@350dekgu'], $masterResult);
 
 // print all product images.
 $imageCount = 0;
