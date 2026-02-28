@@ -266,15 +266,15 @@ class ProductRepository
 			'standardPrice' => 'standard_price',
 			'capitalPrice' => 'capital_price',
 			'ssPrice' => 'ss_price',
-			'sPrice' => 's_price',
-			'aPrice' => 'a_price',
-			'bPrice' => 'b_price',
-			'cPrice' => 'c_price',
+			'sprice' => 's_price',
+			'aprice' => 'a_price',
+			'bprice' => 'b_price',
+			'cprice' => 'c_price',
 			'vbPrice' => 'vb_price',
 			'vcPrice' => 'vc_price',
-			'dPrice' => 'd_price',
-			'ePrice' => 'e_price',
-			'fPrice' => 'f_price'
+			'dprice' => 'd_price',
+			'eprice' => 'e_price',
+			'fprice' => 'f_price'
 		];
 
 		foreach ($allowedPriceFields as $camelCase => $snakeCase) {
