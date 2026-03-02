@@ -96,17 +96,36 @@ class ProductRepository
 
 	public function searchProductByDisplayName($displayName)
 	{
-		$query = 'SELECT p.* FROM product p ';
-		$where = 'WHERE p.product_name_display LIKE :displayName ';
-		$where = $where . " AND product_name_display not like '%[Z]%' and product_name_display not like '%**%' and product_name_display not like '%ยกเลิก%' ";
+		$baseQuery = 'SELECT p.* FROM product p ';
+		$baseFilter = " AND product_name_display NOT LIKE '%[Z]%' AND product_name_display NOT LIKE '%**%' AND product_name_display NOT LIKE '%ยกเลิก%' ";
 		$order = " ORDER BY p.product_name_display ";
 		$limit = " LIMIT 1 ";
 
-		$stmt = $this->dbh->prepare($query . $where . $order . $limit);
-		$stmt->bindValue(':displayName', '%' . $displayName . '%', PDO::PARAM_STR);
+		$keywords = array_values(array_filter(explode(' ', $displayName), function($k) { return $k !== ''; }));
 
-		$stmt->execute();
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+		// Progressive tail-trimming: try all keywords, drop last one if no result, repeat
+		while (count($keywords) > 0) {
+			$where = 'WHERE 1=1 ';
+			foreach ($keywords as $i => $keyword) {
+				$where .= ' AND p.product_name_display LIKE :kw' . $i;
+			}
+			$where .= $baseFilter;
+
+			$stmt = $this->dbh->prepare($baseQuery . $where . $order . $limit);
+			foreach ($keywords as $i => $keyword) {
+				$stmt->bindValue(':kw' . $i, '%' . $keyword . '%', PDO::PARAM_STR);
+			}
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if ($result !== false) {
+				return $result;
+			}
+
+			array_pop($keywords);
+		}
+
+		return false;
 	}
 
 	public function getProduct($productId)
