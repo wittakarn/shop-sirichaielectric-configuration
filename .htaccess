@@ -1,5 +1,5 @@
 RewriteEngine on
 RewriteCond %{REQUEST_URI} /spa/ [or]
 RewriteCond %{REQUEST_URI} /mpa/
-RewriteRule ^(.*)$ /sirichaielectric-configuration/index.php [L]
+RewriteRule ^(.*)$ /shop-sirichaielectric-configuration/index.php [L]
 LimitRequestBody 0

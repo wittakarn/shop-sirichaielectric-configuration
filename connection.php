@@ -4,7 +4,7 @@ class DataBaseConnection
 	const HOST="localhost";
 	const USER="root";
 	const PWD="root";
-	const DBNAME="sirichaielectricdb";
+	const DBNAME="cart";
 	
 	public static function createConnect(){
 		$dbh = new PDO('mysql:host='.self::HOST.';dbname='.self::DBNAME, self::USER, self::PWD);

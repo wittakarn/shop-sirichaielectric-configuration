@@ -30,7 +30,7 @@ class MenuGroupBusiness
         $createdId = $menuGroupRepo->createMenuGroup($params, $menuImageFileName);
 
         $inventoryInMenuRepo = new InventoryInMenuRepository($this->dbh);
-        foreach ($params['inventoryItems'] as $index=>$inventoryItem) {
+        foreach ($params['inventoryItems'] as $index => $inventoryItem) {
             $inventoryInMenuRepo->assignInventoryToMenu($index + 1, $createdId, $inventoryItem['inventoryId'], $inventoryItem['category']);
         }
 
@@ -51,7 +51,7 @@ class MenuGroupBusiness
 
         $inventoryInMenuRepo = new InventoryInMenuRepository($this->dbh);
         $inventoryInMenuRepo->removeAssignedInventoryToMenu($params['id']);
-        foreach ($params['inventoryItems'] as $index=>$inventoryItem) {
+        foreach ($params['inventoryItems'] as $index => $inventoryItem) {
             $inventoryInMenuRepo->assignInventoryToMenu($index + 1, $params['id'], $inventoryItem['inventoryId'], $inventoryItem['category']);
         }
 
@@ -69,6 +69,8 @@ class MenuGroupBusiness
             $result['error'] = 'ไม่สามารถลบเมนูได้เนื่องจากมี sub menu อยู่ภายใต้เมนูนี้';
         } else {
             $menuGroupRepo->deleteMenuGroup($id);
+            $inventoryInMenuRepo = new InventoryInMenuRepository($this->dbh);
+            $inventoryInMenuRepo->removeAssignedInventoryToMenu($subMenus['id']);
             $result['id'] = $id;
         }
 
@@ -79,7 +81,7 @@ class MenuGroupBusiness
     {
         $menuGroupRepo = new MenuGroupRepository($this->dbh);
 
-        foreach($menuGroups as  $index=>$menuGroup) {
+        foreach ($menuGroups as  $index => $menuGroup) {
             $menuGroupRepo->updateMenuGroupSequence($menuGroup["id"], $index + 1);
         }
 

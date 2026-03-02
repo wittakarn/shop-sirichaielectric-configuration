@@ -91,6 +91,7 @@ class ProductGroupBusiness
             
             $totalProductInGroup = count($params['productIds']);
             foreach($params['productIds'] as $index=>$productId) {
+                $productInGroupRepository->removeAssignedProductFromOtherGroup($productId);
                 $productInGroupRepository->assignProductToGroup($params['groupId'], $productId);
                 
                 if(isset($files['productDefaultImage'])) {

@@ -57,8 +57,8 @@ PHP configuration is managed in [config.php](config.php) which defines:
 
 ## Repository
 
-- **GitHub**: [wittakarn/sirichaielectric-configuration](https://github.com/wittakarn/sirichaielectric-configuration)
-- **Issues**: [Report issues here](https://github.com/wittakarn/sirichaielectric-configuration/issues)
+- **GitHub**: [wittakarn/shop-sirichaielectric-configuration](https://github.com/wittakarn/shop-sirichaielectric-configuration)
+- **Issues**: [Report issues here](https://github.com/wittakarn/shop-sirichaielectric-configuration/issues)
 
 ## License
 

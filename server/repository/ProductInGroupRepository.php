@@ -42,6 +42,16 @@ class ProductInGroupRepository
         $stmt->execute();
     }
 
+    public function removeAssignedProductFromOtherGroup($productId){
+        $query = "DELETE FROM product_in_group ";
+        $where = "WHERE product_id = :productId";
+        $stmt = $this->dbh->prepare($query . $where);
+
+        $stmt->bindParam(":productId", $productId, PDO::PARAM_INT);
+
+        $stmt->execute();
+    }
+
     public function getAssignedProducts($groupId) {
         $query = 'SELECT p.* FROM product_in_group pig, product p  ';
 		$where = 'WHERE pig.product_id = p.product_id ';

@@ -1,5 +1,5 @@
 {
-  "name": "sirichaielectric-configuration",
+  "name": "shop-sirichaielectric-configuration",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -50,14 +50,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wittakarn/sirichaielectric-configuration.git"
+    "url": "git+https://github.com/wittakarn/shop-sirichaielectric-configuration.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wittakarn/sirichaielectric-configuration/issues"
+    "url": "https://github.com/wittakarn/shop-sirichaielectric-configuration/issues"
   },
-  "homepage": "https://github.com/wittakarn/sirichaielectric-configuration#readme",
+  "homepage": "https://github.com/wittakarn/shop-sirichaielectric-configuration#readme",
   "engines": {
     "npm": ">=10.0.0 <11.0.0",
     "node": ">=20.0.0 <21.0.0"
