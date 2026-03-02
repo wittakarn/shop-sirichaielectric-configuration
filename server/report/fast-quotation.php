@@ -8,15 +8,16 @@
 require_once(DOCUMENT_ROOT . 'server/library/tcpdf/tcpdf_config.php');
 require_once(DOCUMENT_ROOT . 'server/library/tcpdf/tcpdf.php');
 require_once(DOCUMENT_ROOT . 'server/report/QuotDetailPDF.php');
+require_once(DOCUMENT_ROOT . 'server/report/QuotDetailPdfWithoutLogo.php');
 require_once(DOCUMENT_ROOT . 'server/business/ProductBusiness.php');
 
 ob_start();
 // create new PDF document
-$pdf = new QuotDetailPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new QuotDetailPdfWithoutLogo(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('SIRICHAIELECTRIC');
+$pdf->SetAuthor('No-Name :D');
 $pdf->SetTitle('Quotation detail');
 $pdf->SetSubject('Quotation');
 
@@ -48,24 +49,24 @@ $pdf->AddPage();
 $pdf->generateQuotationDetailTable($detailResults);
 
 // print table footer
-$pdf->generateQuotationDetailTableFooter(['name' => 'AI', 'contact' => '@350dekgu'], $masterResult);
+$pdf->generateQuotationDetailTableFooter(['name' => 'AI', 'contact' => ''], $masterResult);
 
 // print all product images.
-$imageCount = 0;
-foreach ($detailResults as $detail) {
-	if ($imageCount % 16 == 0) {
-		// add a page
-		$pdf->AddPage();
-		$imageCount = 0;
-	}
+// $imageCount = 0;
+// foreach ($detailResults as $detail) {
+// 	if ($imageCount % 16 == 0) {
+// 		// add a page
+// 		$pdf->AddPage();
+// 		$imageCount = 0;
+// 	}
 
-	if ($imageCount > 0 && $imageCount % 4 == 0) {
-		$pdf->Ln(66, false);
-	}
+// 	if ($imageCount > 0 && $imageCount % 4 == 0) {
+// 		$pdf->Ln(66, false);
+// 	}
 
-	$pdf->generateProductImageByProductId($detail["product_id"], $detail['sequence'], $detail['product_name']);
-	$imageCount++;
-}
+// 	$pdf->generateProductImageByProductId($detail["product_id"], $detail['sequence'], $detail['product_name']);
+// 	$imageCount++;
+// }
 // close and output PDF document
 ob_end_clean();
 
