@@ -19,6 +19,7 @@ import { AlignRightGrid, FlexGrid } from 'components/Display/Grid';
 import { TypographyCenter } from 'components/Display/Typography';
 import { UploadImage } from 'components/Display/Upload';
 import { ConfirmDialog } from 'components/Dialog/ConfirmDialog';
+import { GroupSpecList } from './GroupSpecList';
 
 const TypographyForceWidth = styled(TypographyCenter)`
     flex-basis: 200px;
@@ -37,6 +38,7 @@ interface State {
     groupId: number;
     currentProductSelected: ProductOption | null;
     isComfirmDeleteDialogOpen: boolean;
+    specificationImageFileTemp: File | null;
 }
 
 interface FormValues {
@@ -47,6 +49,7 @@ type FormProps = OwnProps & NotificationProps & RouteComponentProps;
 type Props = FormProps & FormikProps<FormValues>;
 
 class ManageProductGroupComponent extends React.PureComponent<Props, State> {
+    imageSpecificationInputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
     static displayName = 'ManageGroupComponent';
 
@@ -57,6 +60,7 @@ class ManageProductGroupComponent extends React.PureComponent<Props, State> {
             groupId,
             currentProductSelected: null,
             isComfirmDeleteDialogOpen: false,
+            specificationImageFileTemp: null,
         };
     }
 
@@ -118,6 +122,38 @@ class ManageProductGroupComponent extends React.PureComponent<Props, State> {
         ]);
     }
 
+    handleGroupSpecImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.currentTarget.files && event.currentTarget.files[0]) {
+            this.setState({
+                specificationImageFileTemp: event.currentTarget.files[0],
+            });
+        }
+    }
+
+    handleAddGroupSpecImage = () => {
+        const { values, setFieldValue } = this.props;
+        const { specificationImageFileTemp } = this.state;
+        if (specificationImageFileTemp) {
+            setFieldValue('fields.groupSpecImages', [
+                ...values.fields.groupSpecImages || [],
+                {
+                    groupId: values.fields.groupId || 0,
+                    file: specificationImageFileTemp,
+                }
+            ]);
+            this.setState({
+                specificationImageFileTemp: null,
+            });
+            this.imageSpecificationInputRef.current!.value = '';
+        }
+    }
+
+    handleRemoveGroupSpecImage = (index: number) => {
+        const { values, setFieldValue } = this.props;
+        const updatedSpecs = values.fields.groupSpecImages?.filter((_, i) => i !== index) || [];
+        setFieldValue('fields.groupSpecImages', updatedSpecs);
+    }
+
     onCloseConfirmClick = () => {
         this.setState({
             isComfirmDeleteDialogOpen: true,
@@ -153,8 +189,6 @@ class ManageProductGroupComponent extends React.PureComponent<Props, State> {
         const { values, handleChange, setFieldValue, handleSubmit } = this.props;
 
         const productGroupImageLink = values.fields.groupImageFileName && <a href={`${application.shopUrl}image/product-group/${values.fields.groupImageFileName}`} target="_blank"><PhotoLibraryIcon /></a>;
-        const groupSpecificationImageLink = values.fields.groupSpecificationImageFileName && <a href={`${application.shopUrl}image/specification-group/${values.fields.groupSpecificationImageFileName}`} target="_blank"><PhotoLibraryIcon /></a>;
-        const groupSpecificationPdfLink = values.fields.groupSpecificationPdfFileName && <a href={`${application.shopUrl}pdf/specification-group/${values.fields.groupSpecificationPdfFileName}`} target="_blank"><PhotoLibraryIcon /></a>;
 
         return (
             <form onSubmit={handleSubmit}>
@@ -218,32 +252,26 @@ class ManageProductGroupComponent extends React.PureComponent<Props, State> {
                         </FlexGrid>
                         <FlexGrid item sm={12} xs={12}>
                             <TypographyForceWidth variant="body1">
-                                Image specification
+                                Specification Images
                             </TypographyForceWidth>
                             <UploadImage
-                                name="fields.groupSpecificationImage"
+                                ref={this.imageSpecificationInputRef}
                                 type="file"
                                 accept="image/*"
-                                onChange={(event) => {
-                                    setFieldValue("fields.groupSpecificationImage", event.currentTarget.files ? event.currentTarget.files[0] : null);
-                                }}
+                                onChange={this.handleGroupSpecImageChange}
                             />
-                            {groupSpecificationImageLink}
+                            <Fab size="small" color="secondary" aria-label="add" onClick={this.handleAddGroupSpecImage}>
+                                <AddIcon />
+                            </Fab>
                         </FlexGrid>
-                        <FlexGrid item sm={12} xs={12}>
-                            <TypographyForceWidth variant="body1">
-                                PDF specification
-                            </TypographyForceWidth>
-                            <UploadImage
-                                name="fields.groupSpecificationPdf"
-                                type="file"
-                                accept="application/pdf"
-                                onChange={(event) => {
-                                    setFieldValue("fields.groupSpecificationPdf", event.currentTarget.files ? event.currentTarget.files[0] : null);
-                                }}
-                            />
-                            {groupSpecificationPdfLink}
-                        </FlexGrid>
+                        {values.fields.groupSpecImages && values.fields.groupSpecImages.length > 0 && (
+                            <Grid item sm={12} xs={12}>
+                                <GroupSpecList
+                                    groupSpecs={values.fields.groupSpecImages}
+                                    handleRemoveClicked={this.handleRemoveGroupSpecImage}
+                                />
+                            </Grid>
+                        )}
                         <FlexGrid item sm={12} xs={12}>
                             <TypographyForceWidth variant="body1">
                                 แสดงผลแบบ
@@ -353,10 +381,9 @@ const initialValue: ProductGroupForm = {
     groupNameSearch: '',
     groupImageFileName: '',
     groupProductDetail: '',
-    groupSpecificationImageFileName: '',
-    groupSpecificationPdfFileName: '',
     displayType: 'list',
     products: [],
+    groupSpecImages: [],
 };
 
 const mapPropsToValues = (props: OwnProps) => {
@@ -367,7 +394,7 @@ const mapPropsToValues = (props: OwnProps) => {
 
 const handleSubmit = async (values: FormValues, { props, resetForm }: FormikBag<FormProps, FormValues>) => {
 
-    const request = mapGroupRequest(values.fields);
+    const request = await mapGroupRequest(values.fields);
     console.log(request);
 
     const groupId = props.location.state as number;

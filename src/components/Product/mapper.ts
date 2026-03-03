@@ -1,12 +1,19 @@
-import { Product, ProductDisplayRequest, ProductForm, ProductRequest } from "interfaces/Product"
+import { ProductInfo, ProductDisplayRequest, ProductForm, ProductRequest } from "interfaces/Product"
+import { imageUrlToFile } from "services/ImageService"
 
-export const mapProductForm = (product: Product): ProductForm => {
+export const mapProductForm = (product: ProductInfo): ProductForm => {
     return {
-        ...product
+        ...product,
+        productNameDisplay: product.productNameDisplay ?? '',
+        productUrlName: product.productUrlName ?? '',
+        productSearch: product.productSearch ?? '',
+        productDetail: product.productDetail ?? '',
+        productSpecs: product.images?.filter(image => image.type === 'SPEC') ?? [],
     }
 }
 
-export const mapProductRequest = (product: ProductForm): ProductRequest => {
+export const mapProductRequest = async (product: ProductForm): Promise<ProductRequest> => {
+    const productSpecImages = product.productSpecs?.map(async spec => spec.file ?? await imageUrlToFile(`${application.shopUrl}image/specification/${spec.fileName}`, spec.fileName!)) ?? []
     return {
         productId: product.productId,
         productName: product.productName,
@@ -16,14 +23,13 @@ export const mapProductRequest = (product: ProductForm): ProductRequest => {
         standardPrice: product.standardPrice,
         bPrice: product.bPrice,
         productDetail: product.productDetail,
-        productImage: product.productImage || null,
-        specificationPdf: product.specificationPdf || null,
-        specificationImage: product.specificationImage || null,
+        productImage: product.productImage ?? null,
+        productSpecImages: await Promise.all(productSpecImages),
     }
 }
 
 
-export const mapProductDisplayRequest = (products: Product[]): ProductDisplayRequest => {
+export const mapProductDisplayRequest = (products: ProductInfo[]): ProductDisplayRequest => {
     return {
         products: products.map(product => (
             {

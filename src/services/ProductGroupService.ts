@@ -18,16 +18,14 @@ export async function createProductGroup(request: ProductGroupRequest): Promise<
         agent.attach('productGroupImage', request.productGroupImage as any);
     }
 
-    if (request.groupSpecificationImage) {
-        agent.attach('groupSpecificationImage', request.groupSpecificationImage as any);
-    }
-
-    if (request.groupSpecificationPdf) {
-        agent.attach('groupSpecificationPdf', request.groupSpecificationPdf as any);
-    }
-
     if (request.productDefaultImage) {
         agent.attach('productDefaultImage', request.productDefaultImage as any);
+    }
+
+    if (request.groupSpecImages && request.groupSpecImages.length > 0) {
+        request.groupSpecImages.forEach(file => {
+            agent.attach('groupSpecImages[]', file as any);
+        });
     }
 
     return await agent
@@ -42,16 +40,14 @@ export async function updateProductGroup(request: ProductGroupRequest): Promise<
         agent.attach('productGroupImage', request.productGroupImage as any);
     }
 
-    if (request.groupSpecificationImage) {
-        agent.attach('groupSpecificationImage', request.groupSpecificationImage as any);
-    }
-
-    if (request.groupSpecificationPdf) {
-        agent.attach('groupSpecificationPdf', request.groupSpecificationPdf as any);
-    }
-
     if (request.productDefaultImage) {
         agent.attach('productDefaultImage', request.productDefaultImage as any);
+    }
+
+    if (request.groupSpecImages && request.groupSpecImages.length > 0) {
+        request.groupSpecImages.forEach(file => {
+            agent.attach('groupSpecImages[]', file as any);
+        });
     }
 
     return await agent

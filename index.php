@@ -19,7 +19,7 @@ handlePermission();
             var application = {
                 root: '<?php echo WEB_ROOT; ?>',
                 contextRoot: '<?php echo ROOT; ?>',
-                shopUrl: '<?php echo SHOP_CONFIG_URL; ?>',
+                shopUrl: '<?php echo SHOP_URL; ?>',
                 user: JSON.parse('<?php echo isset($_SESSION['user']) ? $_SESSION['user'] : 'null'; ?>'),
                 thaiVat: <?php echo THAI_VAT; ?>,
                 quotationAvailable: <?php echo QUOTATION_AVAILABLE ?>

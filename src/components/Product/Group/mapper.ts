@@ -1,6 +1,9 @@
 import { ProductGroupForm, ProductGroupInformation, ProductGroupRequest } from 'interfaces/ProductGroup'
+import { imageUrlToFile } from 'services/ImageService';
 
-export const mapGroupRequest = (productGroupForm: ProductGroupForm): ProductGroupRequest => {
+export const mapGroupRequest = async (productGroupForm: ProductGroupForm): Promise<ProductGroupRequest> => {
+    const productSpecImages = productGroupForm.groupSpecImages?.map(async spec => spec.file ?? await imageUrlToFile(`${application.shopUrl}image/specification-group/${spec.fileName}`, spec.fileName!)) ?? []
+
     return {
         groupId: productGroupForm.groupId ? Number(productGroupForm.groupId) : null,
         groupNameDisplay: productGroupForm.groupNameDisplay,
@@ -9,17 +12,14 @@ export const mapGroupRequest = (productGroupForm: ProductGroupForm): ProductGrou
         productIds: productGroupForm.products.map(p => p.productId),
         groupProductDetail: productGroupForm.groupProductDetail,
         productGroupImage: productGroupForm.productGroupImage || null,
-        groupSpecificationImage: productGroupForm.groupSpecificationImage || null,
-        groupSpecificationPdf: productGroupForm.groupSpecificationPdf || null,
         productDefaultImage: productGroupForm.productDefaultImage || null,
+        groupSpecImages: await Promise.all(productSpecImages),
     };
 }
 export const mapProductGroupForm = (productGroupInformation: ProductGroupInformation): ProductGroupForm => {
     return {
         groupProductDetail: productGroupInformation.productGroup.groupProductDetail,
         groupImageFileName: productGroupInformation.productGroup.groupImageFileName,
-        groupSpecificationImageFileName: productGroupInformation.productGroup.groupSpecificationImageFileName,
-        groupSpecificationPdfFileName: productGroupInformation.productGroup.groupSpecificationPdfFileName,
         groupNameSearch: productGroupInformation.productGroup.groupNameSearch,
         groupNameDisplay: productGroupInformation.productGroup.groupNameDisplay,
         displayType: productGroupInformation.productGroup.displayType,
@@ -27,5 +27,6 @@ export const mapProductGroupForm = (productGroupInformation: ProductGroupInforma
             ...(productGroupInformation.products || [])
         ],
         groupId: productGroupInformation.productGroup.groupId,
+        groupSpecImages: productGroupInformation.productGroup.images?.filter(image => image.type === 'SPEC') ?? [],
     };
 }

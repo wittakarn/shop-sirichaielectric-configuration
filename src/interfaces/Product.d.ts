@@ -1,4 +1,6 @@
+import { extend } from "lodash";
 import { MenuGroup } from "./MenuGroup";
+import { ProductImage } from "./ProductImage";
 
 export interface Product {
     productId: number;
@@ -13,14 +15,39 @@ export interface Product {
     productGroupId: number;
     menuId: number;
     productImageFileName: string;
-    specificationPdfFileName: string;
-    specificationImageFileName: string;
 }
 
-export interface ProductForm extends Product {
+export interface ProductInfo extends Product {
+    productId: number;
+    productName: string;
+    productNameDisplay: string;
+    productUrlName: string;
+    productSearch: string;
+    standardPrice: number;
+    capitalPrice: number;
+    bPrice: number;
+    productDetail: string;
+    productGroupId: number;
+    menuId: number;
+    productImageFileName: string;
+    images: ProductImage[];
+}
+
+export interface ProductForm {
+    productId: number;
+    productName: string;
+    productNameDisplay: string;
+    productUrlName: string;
+    productSearch: string;
+    standardPrice: number;
+    capitalPrice: number;
+    bPrice: number;
+    productDetail: string;
+    productGroupId: number;
+    menuId: number;
+    productImageFileName: string;
     productImage?: File;
-    specificationPdf?: File;
-    specificationImage?: File;
+    productSpecs: ProductImage[];
 }
 
 export interface ProductRequest {
@@ -33,8 +60,7 @@ export interface ProductRequest {
     bPrice: number;
     productDetail: string;
     productImage: File | null;
-    specificationPdf: File | null;
-    specificationImage: File | null;
+    productSpecImages: File[];
 }
 
 export interface ProductSearchResult extends Product {

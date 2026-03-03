@@ -2,7 +2,7 @@
 -- CROSS-DATABASE PRODUCT SYNC TRIGGER SOLUTION
 -- ================================================================
 -- This script creates triggers to automatically sync product_name
--- and all price fields from shop-sirichaielectricdb.product
+-- and all price fields from cart.product
 -- to sirichaielectricdb.product when changes occur.
 --
 -- Author: Database Sync System
@@ -10,12 +10,12 @@
 -- ================================================================
 
 -- Ensure we're in the source database
-USE `shop-sirichaielectricdb`;
+USE `cart`;
 
 -- ================================================================
 -- TRIGGER 1: Sync on UPDATE
 -- ================================================================
--- This trigger fires AFTER any UPDATE on shop-sirichaielectricdb.product
+-- This trigger fires AFTER any UPDATE on cart.product
 -- and updates the corresponding record in sirichaielectricdb.product
 
 DELIMITER $$
@@ -23,7 +23,7 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS `sync_product_to_sirichaielectric_after_update`$$
 
 CREATE TRIGGER `sync_product_to_sirichaielectric_after_update`
-AFTER UPDATE ON `shop-sirichaielectricdb`.`product`
+AFTER UPDATE ON `cart`.`product`
 FOR EACH ROW
 BEGIN
     -- Update the target database with new product_name and all prices
@@ -56,7 +56,7 @@ DELIMITER ;
 -- ================================================================
 -- TRIGGER 2: Sync on INSERT
 -- ================================================================
--- This trigger fires AFTER any INSERT on shop-sirichaielectricdb.product
+-- This trigger fires AFTER any INSERT on cart.product
 -- and creates the corresponding record in sirichaielectricdb.product
 
 DELIMITER $$
@@ -64,7 +64,7 @@ DELIMITER $$
 DROP TRIGGER IF EXISTS `sync_product_to_sirichaielectric_after_insert`$$
 
 CREATE TRIGGER `sync_product_to_sirichaielectric_after_insert`
-AFTER INSERT ON `shop-sirichaielectricdb`.`product`
+AFTER INSERT ON `cart`.`product`
 FOR EACH ROW
 BEGIN
     -- Insert into target database if the product doesn't already exist

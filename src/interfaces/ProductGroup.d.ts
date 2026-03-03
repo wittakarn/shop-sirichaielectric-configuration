@@ -1,4 +1,5 @@
 import { Product, ProductOption } from "./Product";
+import { GroupImage } from "./GroupImage";
 
 export interface ProductGroup {
     groupId?: number;
@@ -6,9 +7,17 @@ export interface ProductGroup {
     groupNameSearch: string;
     groupProductDetail: string;
     groupImageFileName: string;
-    groupSpecificationImageFileName: string;
-    groupSpecificationPdfFileName: string;
     displayType: string;
+}
+
+export interface ProductGroupInfo {
+    groupId: number;
+    groupNameDisplay: string;
+    groupNameSearch: string;
+    groupProductDetail: string;
+    groupImageFileName: string;
+    displayType: string;
+    images: GroupImage[];
 }
 
 export interface ProductGroupForm extends ProductGroup {
@@ -17,6 +26,7 @@ export interface ProductGroupForm extends ProductGroup {
     groupSpecificationImage?: File;
     groupSpecificationPdf?: File;
     productDefaultImage?: File;
+    groupSpecImages?: GroupImage[];
 }
 
 export interface ProductGroupSearchForm {
@@ -32,13 +42,12 @@ export interface ProductGroupRequest {
     productIds: number[];
     groupProductDetail: string;
     productGroupImage: File | null;
-    groupSpecificationImage: File | null;
-    groupSpecificationPdf: File | null;
     productDefaultImage: File | null;
+    groupSpecImages?: File[];
 }
 
 export interface ProductGroupInformation {
-    productGroup: ProductGroup;
+    productGroup: ProductGroupInfo;
     products: Product[];
 }
 
