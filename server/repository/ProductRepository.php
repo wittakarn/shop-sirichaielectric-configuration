@@ -160,7 +160,7 @@ class ProductRepository
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function update($params, $productImageFileName)
+	public function update($params, $productImageFileName, $specificationImageFileName, $specificationPdfFileName)
 	{
 		$query = 'UPDATE product SET product_name = :productName,
 						product_name_display = :productNameDisplay,
@@ -172,6 +172,14 @@ class ProductRepository
 
 		if ($productImageFileName) {
 			$query .= ' ,product_image_file_name = :productImageFileName ';
+		}
+
+		if ($specificationImageFileName) {
+			$query .= ' ,specification_image_file_name = :specificationImageFileName ';
+		}
+
+		if ($specificationPdfFileName) {
+			$query .= ' ,specification_pdf_file_name = :specificationPdfFileName ';
 		}
 
 		$where = ' WHERE product_id = :productId';
@@ -187,6 +195,14 @@ class ProductRepository
 
 		if ($productImageFileName) {
 			$stmt->bindParam(':productImageFileName', $productImageFileName, PDO::PARAM_STR);
+		}
+
+		if ($specificationPdfFileName) {
+			$stmt->bindParam(':specificationPdfFileName', $specificationPdfFileName, PDO::PARAM_STR);
+		}
+
+		if ($specificationImageFileName) {
+			$stmt->bindParam(':specificationImageFileName', $specificationImageFileName, PDO::PARAM_STR);
 		}
 
 		$stmt->bindParam(':productId', $params['productId'], PDO::PARAM_INT);
