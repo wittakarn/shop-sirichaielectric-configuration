@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'connection.php';
 require_once DOCUMENT_ROOT . 'server/repository/ProductRepository.php';
@@ -82,7 +80,7 @@ class ProductBusiness
 
             $result['status'] = 'success';
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -123,7 +121,7 @@ class ProductBusiness
                 }
             }
             $this->dbh->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -145,7 +143,7 @@ class ProductBusiness
                 $productRepo->updateProductDisplay($availableProduct['product_id'], $productNameDisplay, $productUrlName);
             }
             $this->dbh->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -165,7 +163,7 @@ class ProductBusiness
                 $productRepo->updateProductDisplay($product['productId'], $productNameDisplay, $productUrlName);
             }
             $this->dbh->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -203,7 +201,7 @@ class ProductBusiness
 
                     $productRepo->updateProductPricing($product['productId'], $product);
                     $updatedCount++;
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     $failedProducts[] = [
                         'productId' => $product['productId'] ? $product['productId'] : 'unknown',
                         'error' => $e->getMessage()
@@ -219,7 +217,7 @@ class ProductBusiness
                 'totalCount' => count($products),
                 'failedProducts' => $failedProducts
             ];
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             throw new Exception("Failed to update products pricing: " . $e->getMessage());
         }

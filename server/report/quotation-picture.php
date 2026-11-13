@@ -1,7 +1,5 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-error_reporting(E_ERROR | E_PARSE);
 require_once "../config.php";
 require_once DOCUMENT_ROOT . '/connection.php';
 require_once DOCUMENT_ROOT . '/class/class.User.php';

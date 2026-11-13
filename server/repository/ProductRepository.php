@@ -11,7 +11,7 @@ class ProductRepository
 
 	public function getProducts($menuId, $productName)
 	{
-		$subNames = explode(" ", $productName);
+		$subNames = explode(" ", $productName ?? "");
 		$subNamesSize = count($subNames);
 
 		$query = 'SELECT gg.group_id, p.product_id, p.product_url_name, p.product_name, p.c_price, gg.group_name_display, pmg.group_name_display menu_group_name_p, gmg.group_name_display menu_group_name_g FROM product p ';
@@ -46,7 +46,7 @@ class ProductRepository
 
 	public function getProductOptions($productName)
 	{
-		$subNames = explode(" ", $productName);
+		$subNames = explode(" ", $productName ?? "");
 		$subNamesSize = count($subNames);
 
 		$query = 'SELECT p.product_id, p.product_name FROM product p ';
@@ -70,7 +70,7 @@ class ProductRepository
 
 	public function searchProducts($productName, $size)
 	{
-		$subNames = explode(" ", $productName);
+		$subNames = explode(" ", $productName ?? "");
 		$subNamesSize = count($subNames);
 
 		$query = 'SELECT p.* FROM product p ';

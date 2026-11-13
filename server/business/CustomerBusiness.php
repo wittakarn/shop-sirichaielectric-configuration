@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'connection.php';
 require_once DOCUMENT_ROOT . 'server/repository/CustomerRepository.php';
@@ -37,7 +35,7 @@ class CustomerBusiness
 
             $result['status'] = 'success';
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -51,7 +49,7 @@ class CustomerBusiness
 
             $result['inactiveId'] = $id;
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }

@@ -34,14 +34,14 @@ function convertStringToCamelCase($key)
 
 function mapNameDisplay($name)
 {
-    $nameDisplay = trim(preg_replace("/\[.*?\]|\{.*?\}/", "", $name));
+    $nameDisplay = trim(preg_replace("/\[.*?\]|\{.*?\}/", "", $name ?? ""));
 
     return $nameDisplay;
 }
 
 function mapUrlName($name)
 {
-    $urlName = trim(preg_replace("/\[.*?\]|\{.*?\}/", "", $name));
+    $urlName = trim(preg_replace("/\[.*?\]|\{.*?\}/", "", $name ?? ""));
     $urlName = preg_replace("/\"|'| |\+|\/|\\\|%/", "-", $urlName);
     $urlName = preg_replace("/\./", "-", $urlName);
 

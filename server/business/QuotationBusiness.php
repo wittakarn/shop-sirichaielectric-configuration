@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'connection.php';
 require_once DOCUMENT_ROOT . 'server/repository/QuotationRepository.php';
@@ -39,7 +37,7 @@ class QuotationBusiness
 
             $result['quotNo'] = $quotNo;
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -59,7 +57,7 @@ class QuotationBusiness
 
             $result['quotNo'] = $params['quotNo'];
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }

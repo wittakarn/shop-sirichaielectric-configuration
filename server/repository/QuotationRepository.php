@@ -50,9 +50,9 @@ class QuotationRepository
         $stmt = $db->prepare($query);
         $stmt->bindParam(":quot_no", $params['quotNo'], PDO::PARAM_STR);
         $stmt->bindParam(":customer_id", $customerId, PDO::PARAM_INT);
-        $stmt->bindValue(":total_price", str_replace(",", "", $params['totalPrice']), PDO::PARAM_STR);
-        $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice']), PDO::PARAM_STR);
-        $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice']), PDO::PARAM_STR);
+        $stmt->bindValue(":total_price", str_replace(",", "", $params['totalPrice'] ?? ""), PDO::PARAM_STR);
+        $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice'] ?? ""), PDO::PARAM_STR);
+        $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":promotion_type", "", PDO::PARAM_STR);
         $stmt->bindParam(":create_user", $params['email'], PDO::PARAM_STR);
 
@@ -65,9 +65,9 @@ class QuotationRepository
         $query = "UPDATE quot_mast SET total_price=:total_price,vat_price=:vat_price,net_price=:net_price,promotion_type=:promotion_type,update_user=:update_user,update_datetime=NOW(),update_count=update_count+1 WHERE quot_no=:quot_no";
         $stmt = $db->prepare($query);
         $stmt->bindParam(":quot_no", $params['quotNo'], PDO::PARAM_STR);
-        $stmt->bindValue(":total_price", str_replace(",", "", $params['totalPrice']), PDO::PARAM_STR);
-        $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice']), PDO::PARAM_STR);
-        $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice']), PDO::PARAM_STR);
+        $stmt->bindValue(":total_price", str_replace(",", "", $params['totalPrice'] ?? ""), PDO::PARAM_STR);
+        $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice'] ?? ""), PDO::PARAM_STR);
+        $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":promotion_type", "", PDO::PARAM_STR);
         $stmt->bindParam(":update_user", $params['email'], PDO::PARAM_STR);
 
@@ -126,9 +126,9 @@ class QuotationRepository
             $stmt->bindParam(":product_name", $product['productName'], PDO::PARAM_STR);
             $stmt->bindParam(":quantity", $item['productAmount'], PDO::PARAM_STR);
             $stmt->bindParam(":unit_name", $product['unitName'], PDO::PARAM_STR);
-            $stmt->bindValue(":price", str_replace(",", "", $item['productPrice']), PDO::PARAM_STR);
-            $stmt->bindValue(":capital_price", str_replace(",", "", $product['capitalPrice']), PDO::PARAM_STR);
-            $stmt->bindValue(":summary_price", str_replace(",", "", $item['summedProductPrice']), PDO::PARAM_STR);
+            $stmt->bindValue(":price", str_replace(",", "", $item['productPrice'] ?? ""), PDO::PARAM_STR);
+            $stmt->bindValue(":capital_price", str_replace(",", "", $product['capitalPrice'] ?? ""), PDO::PARAM_STR);
+            $stmt->bindValue(":summary_price", str_replace(",", "", $item['summedProductPrice'] ?? ""), PDO::PARAM_STR);
 
             $stmt->execute();
         }

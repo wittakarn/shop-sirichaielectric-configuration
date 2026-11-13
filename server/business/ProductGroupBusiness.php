@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'connection.php';
 require_once DOCUMENT_ROOT . 'server/repository/ProductGroupRepository.php';
@@ -42,8 +40,8 @@ class ProductGroupBusiness
             $groupId = $productGroupRepo->createProductGroup($params, $groupImageFileName, $groupSpecificationImageFileName, $groupSpecificationPdfFileName);
 
             $productInGroupRepository = new ProductInGroupRepository($this->dbh);
-            $totalProductInGroup = count($params['productIds']);
-            foreach($params['productIds'] as $index=>$productId) {
+            $totalProductInGroup = count($params['productIds'] ?? []);
+            foreach(($params['productIds'] ?? []) as $index=>$productId) {
                 $productInGroupRepository->assignProductToGroup($groupId, $productId);
 
                 if(isset($files['productDefaultImage'])) {
@@ -56,7 +54,7 @@ class ProductGroupBusiness
             $result['createdId'] = $groupId;
             $result['status'] = 'success';
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -89,8 +87,8 @@ class ProductGroupBusiness
             $productInGroupRepository = new ProductInGroupRepository($this->dbh);
             $productInGroupRepository->removeAssignedProductToGroup($params['groupId']);
             
-            $totalProductInGroup = count($params['productIds']);
-            foreach($params['productIds'] as $index=>$productId) {
+            $totalProductInGroup = count($params['productIds'] ?? []);
+            foreach(($params['productIds'] ?? []) as $index=>$productId) {
                 $productInGroupRepository->removeAssignedProductFromOtherGroup($productId);
                 $productInGroupRepository->assignProductToGroup($params['groupId'], $productId);
                 
@@ -103,7 +101,7 @@ class ProductGroupBusiness
 
             $result['updatedId'] = $params['groupId'];
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
@@ -121,7 +119,7 @@ class ProductGroupBusiness
 
             $result['deletedId'] = $groupId;
             return $result;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dbh->rollBack();
             echo "Failed: " . $e->getMessage();
         }
