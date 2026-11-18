@@ -1,9 +1,17 @@
 <?php
 require_once '../../config.php';
 require_once DOCUMENT_ROOT . 'server/business/ProductBusiness.php';
+require_once DOCUMENT_ROOT . 'server/business/QuotationBusiness.php';
 require_once DOCUMENT_ROOT . 'server/utils/String.php';
 
 header('Content-Type: application/json; charset=utf-8');
+
+// Machine-to-machine: only the chatbot may call this (QUOTATION_TOKEN lives in config.php).
+if (!hash_equals(QUOTATION_TOKEN, $_SERVER['HTTP_X_QUOTATION_TOKEN'] ?? '')) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Unauthorized']);
+    exit;
+}
 
 $validPriceTypes = ['standard', 'capital', 'ss', 's', 'a', 'b', 'c', 'vb', 'vc', 'd', 'e', 'f'];
 $noVatPriceTypes = ['a', 'b', 'c', 'd'];
@@ -19,6 +27,8 @@ try {
 
     $quotaDetail = $input['quotaDetail'];
     $priceType = $input['priceType'];
+    // Contact note from the AI caller, e.g. Line ID or phone number.
+    $remark = isset($input['remark']) && is_string($input['remark']) ? mb_substr(trim($input['remark']), 0, 500) : null;
 
     if (!in_array($priceType, $validPriceTypes)) {
         http_response_code(400);
@@ -76,6 +86,30 @@ try {
     ];
     $profitMargin = '';
 
+    // Save to quot_mast / quot_detail (no customer; contact lives in remark).
+    $quotationBusiness = new QuotationBusiness();
+    $created = $quotationBusiness->createQuotation([
+        'email' => 'AI',
+        'remark' => $remark ?: null,
+        'totalPrice' => $totalPrice,
+        'vatPrice' => $vatPrice,
+        'summedPrice' => $netPrice,
+        'productsInQuotation' => array_map(function ($d) {
+            return [
+                'product' => [
+                    'productId' => $d['product_id'],
+                    'productName' => $d['product_name'],
+                    'unitName' => $d['unit_name'],
+                    'capitalPrice' => $d['capital_price'],
+                ],
+                'productAmount' => $d['quantity'],
+                'productPrice' => $d['price'],
+                'summedProductPrice' => $d['summary_price'],
+            ];
+        }, $detailResults),
+    ]);
+    $quotNo = $created['quotNo'];
+
     // Generate PDF
     $tempDir = DOCUMENT_ROOT . 'server/report/temp/';
     if (!is_dir($tempDir)) {
@@ -88,7 +122,7 @@ try {
     require(DOCUMENT_ROOT . 'server/report/fast-quotation.php');
 
     $pdfUrl = WEB_ROOT . 'server/report/temp/' . $filename;
-    echo json_encode(['pdfUrl' => $pdfUrl]);
+    echo json_encode(['quotNo' => $quotNo, 'pdfUrl' => $pdfUrl]);
 
 } catch (Throwable $e) {
     http_response_code(500);

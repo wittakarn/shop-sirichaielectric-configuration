@@ -39,7 +39,7 @@ class QuotationBusiness
             return $result;
         } catch (Throwable $e) {
             $this->dbh->rollBack();
-            echo "Failed: " . $e->getMessage();
+            throw $e;
         }
     }
 

@@ -22,4 +22,6 @@ define('COOKIES_ALIVE', $tenDays);
 
 define('THAI_VAT', 7);
 define('QUOTATION_AVAILABLE', 'false');
+// Shared secret for the chatbot calling server/rest/generate-fast-quotation.php (same value as QUOTATION_TOKEN in its .env).
+define('QUOTATION_TOKEN', '7ffe378af029764c10021b1036e0b402ca280947ba68480627e6c19c23312d10');
 ?>

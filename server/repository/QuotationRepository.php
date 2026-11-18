@@ -44,9 +44,9 @@ class QuotationRepository
 
     public function createQuotMast($params)
     {
-        $customerId = $params['customer']['id'];
+        $customerId = $params['customer']['id'] ?? null;
         $db = $this->dbh;
-        $query = "INSERT INTO quot_mast(quot_no, customer_id, date, total_price, vat_price, net_price, promotion_type, create_user, create_datetime, update_count) VALUES (:quot_no, :customer_id, NOW(), :total_price, :vat_price, :net_price, :promotion_type, :create_user, NOW(), 0)";
+        $query = "INSERT INTO quot_mast(quot_no, customer_id, date, total_price, vat_price, net_price, promotion_type, remark, create_user, create_datetime, update_count) VALUES (:quot_no, :customer_id, NOW(), :total_price, :vat_price, :net_price, :promotion_type, :remark, :create_user, NOW(), 0)";
         $stmt = $db->prepare($query);
         $stmt->bindParam(":quot_no", $params['quotNo'], PDO::PARAM_STR);
         $stmt->bindParam(":customer_id", $customerId, PDO::PARAM_INT);
@@ -54,6 +54,7 @@ class QuotationRepository
         $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":promotion_type", "", PDO::PARAM_STR);
+        $stmt->bindValue(":remark", $params['remark'] ?? null, PDO::PARAM_STR);
         $stmt->bindParam(":create_user", $params['email'], PDO::PARAM_STR);
 
         $stmt->execute();

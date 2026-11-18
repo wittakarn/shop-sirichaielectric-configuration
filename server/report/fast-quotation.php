@@ -3,6 +3,8 @@
 // $detailResults - array of quotation detail records
 // $masterResult  - array with total_price, vat_price, net_price, promotion_type
 // $profitMargin  - profit margin code
+// $remark        - optional customer contact note (Line ID, phone, ...)
+// $quotNo        - saved quotation number
 // $outputPath    - full file path to save the PDF (uses 'F' mode), or null to stream inline ('I' mode)
 
 require_once(DOCUMENT_ROOT . 'server/library/tcpdf/tcpdf_config.php');
@@ -45,11 +47,23 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // add a page
 $pdf->AddPage();
 
+if (!empty($quotNo)) {
+	$pdf->SetFont('', 'B', 12);
+	$pdf->Cell(0, 6, 'เลขที่ใบเสนอราคา: ' . $quotNo, 0, 1, 'R');
+}
+
 // print quotation detail table
 $pdf->generateQuotationDetailTable($detailResults);
 
 // print table footer
 $pdf->generateQuotationDetailTableFooter(['name' => 'AI', 'contact' => ''], $masterResult);
+
+// customer contact note from the AI caller (plain text cell, not HTML)
+if (!empty($remark)) {
+	$pdf->Ln(8);
+	$pdf->SetFont('', 'B', 12);
+	$pdf->MultiCell(0, 5, 'หมายเหตุ / ติดต่อลูกค้า: ' . $remark, 0, 'L');
+}
 
 // print all product images.
 // $imageCount = 0;
