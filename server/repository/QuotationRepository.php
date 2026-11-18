@@ -46,16 +46,18 @@ class QuotationRepository
     {
         $customerId = $params['customer']['id'] ?? null;
         $db = $this->dbh;
-        $query = "INSERT INTO quot_mast(quot_no, customer_id, date, total_price, vat_price, net_price, promotion_type, remark, create_user, create_datetime, update_count) VALUES (:quot_no, :customer_id, NOW(), :total_price, :vat_price, :net_price, :promotion_type, :remark, :create_user, NOW(), 0)";
+        // Sirichai schema (same columns as shop-sirichaielectric/class/class.QuotMast.php) + remark.
+        $query = "INSERT INTO quot_mast(quot_no, year, sequence, email, customer_id, date, total_price, vat_price, net_price, remark) VALUES (:quot_no, :year, :sequence, :email, :customer_id, NOW(), :total_price, :vat_price, :net_price, :remark)";
         $stmt = $db->prepare($query);
         $stmt->bindParam(":quot_no", $params['quotNo'], PDO::PARAM_STR);
+        $stmt->bindValue(":year", $params['year'], PDO::PARAM_INT);
+        $stmt->bindValue(":sequence", $params['sequence'], PDO::PARAM_INT);
+        $stmt->bindValue(":email", $params['email'] ?? null, PDO::PARAM_STR);
         $stmt->bindParam(":customer_id", $customerId, PDO::PARAM_INT);
         $stmt->bindValue(":total_price", str_replace(",", "", $params['totalPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":vat_price", str_replace(",", "", $params['vatPrice'] ?? ""), PDO::PARAM_STR);
         $stmt->bindValue(":net_price", str_replace(",", "", $params['summedPrice'] ?? ""), PDO::PARAM_STR);
-        $stmt->bindValue(":promotion_type", "", PDO::PARAM_STR);
         $stmt->bindValue(":remark", $params['remark'] ?? null, PDO::PARAM_STR);
-        $stmt->bindParam(":create_user", $params['email'], PDO::PARAM_STR);
 
         $stmt->execute();
     }

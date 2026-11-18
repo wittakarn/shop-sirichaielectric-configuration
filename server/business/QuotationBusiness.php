@@ -18,20 +18,20 @@ class QuotationBusiness
         try {
             $this->dbh->beginTransaction();
             $repo = new QuotationRepository($this->dbh);
+            // Same numbering as the shop (shop-sirichaielectric/crud/create-quotation.php):
+            // quot_no holds the NEXT number, so use it as-is, then increment.
             $latestQuotNo = $repo->getLatestQuotSequence();
-
-            if (!$latestQuotNo || $latestQuotNo == null) {
+            if (!$latestQuotNo) {
                 $latestQuotNo = $repo->createQuotNo();
-                $nextSequence = $latestQuotNo['sequence'];
-            } else {
-                $nextSequence = $latestQuotNo['sequence'] + 1;
-                $repo->updateQuotNoSequence();
             }
 
-            $quotNo = generateQuotNo($latestQuotNo['year'], $nextSequence);
-            $params['quotNo'] = $quotNo;
+            $params['year'] = $latestQuotNo['year'];
+            $params['sequence'] = $latestQuotNo['sequence'];
+            $params['quotNo'] = $params['year'] . '/' . $params['sequence'];
+            $quotNo = $params['quotNo'];
             $repo->createQuotMast($params);
             $repo->createQuotDetails($params);
+            $repo->updateQuotNoSequence();
 
             $this->dbh->commit();
 
